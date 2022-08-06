@@ -1,5 +1,5 @@
 import './App.css';
-
+import Post from './Post';
 function App() {
   return (
     <div className="app">
@@ -13,6 +13,7 @@ function App() {
       </div>
 
       <h1>Hello Clever programmer, Let's build an instagram clone with react</h1>
+      <Post/>
 
     </div>
   );
