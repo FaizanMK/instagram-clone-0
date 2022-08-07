@@ -2,38 +2,121 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Post from './Post';
 import {db} from './firebase';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 function App() {
- const [posts,setPosts]=useState([]);
+ 
+  const [posts, setPosts]=useState([]);
+  const[open,setOpen]=useState(false);
+  const[username,setUsername]=useState('');
+  const[email,setEmail]=useState('');
+  const[password,setPassword]=useState('');
+
+
+
 
  useEffect(() => {
 
   db.collection('posts').onSnapshot(snapshot => {
 
-    setPosts(snapshot.docs.map(doc => doc.data()))
+    setPosts(snapshot.docs.map(doc => ({
+      
+      id: doc.id,
+      post: doc.data()})))
   })
 
  },[] )
 
+ const signUp=(event)=> {
+    event.preventDefault();
+
+  
+ }
  
   return (
     <div className="app">
-     
+      <Modal
+        open={open}
+        onClose={()=> setOpen(false)}
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
 
-      <div className="app__header">
-
-      <img className="app__headerImage" 
+            <form  className="app__signup">
+            <center>
+            <img className="app__headerImage" 
             src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
             alt="" />
+
+            </center>
+
+          <TextField
+           placeholder="username"
+           type="text"
+           email={username}
+           onChange={(e)=>setUsername(e.target.value)}
+           >
+          </TextField>
+
+          <TextField
+           placeholder="email"
+           type="text"
+           email={email}
+           onChange={(e)=>setEmail(e.target.value)}
+           >
+          </TextField>
+
+          <TextField
+           placeholder="password"
+           type="text"
+           email={password}
+           onChange={(e)=>setPassword(e.target.value)}
+           >
+          </TextField> 
+
+          <Button type="submit" onClick={signUp} >Sign Up</Button>
+
+          </form>
+            
+          </Typography>
+          
+        </Box>
+       
+      </Modal>
+
+
+      <div className="app__header">
+        <img
+          className="app__headerImage"
+          src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+          alt=""
+        />
       </div>
+      <Button onClick={()=> setOpen(true)}>Sign Up</Button>
 
       <h1>Hello Clever programmer, Let's build an instagram clone with react</h1>
       {
-        posts.map(post => (
+        posts.map(({id,post}) => (
         //  return <Post username={post.username} caption={post.caption} imageUrl={post.imageUrl} /> che kala
         // () na use kao {} da kao nu bya b return statement wrkao b/c map returns something
 
-          <Post username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
+          <Post key={id}  username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
 
         ))
       }
