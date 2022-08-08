@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import Post from './Post';
-import {db} from './firebase';
+import {auth, db} from './firebase';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -24,11 +24,37 @@ function App() {
  
   const [posts, setPosts]=useState([]);
   const[open,setOpen]=useState(false);
+  const [openSignIn, setOpenSignin]=useState(false);
   const[username,setUsername]=useState('');
   const[email,setEmail]=useState('');
   const[password,setPassword]=useState('');
+  const [user, setUser]=useState(null);
+
+useEffect( () => {
+
+const unsubscribe= auth.onAuthStateChanged((authUser) => {
+if (authUser){
+// User is signed in
+console.log(authUser);
+setUser(authUser);
 
 
+
+} else {
+// User is signed out
+setUser(null);
+}
+
+
+})
+
+return () => {
+  //perform some cleanup actions
+  unsubscribe();
+
+}
+
+}, [user,username]);
 
 
  useEffect(() => {
@@ -46,7 +72,25 @@ function App() {
  const signUp=(event)=> {
     event.preventDefault();
 
+    auth.createUserWithEmailAndPassword(email,password)
+    .then((authUser) => {
+      return authUser.user.updateProfile({
+        displayName: username,
+      })
+    })
+    .catch((error)=> alert(error.message))
   
+    setOpen(false);
+ }
+
+ const signIn=(event)=>{
+  event.preventDefault();
+
+  auth.signInWithEmailAndPassword(email, password)
+  .catch((error) => {
+  alert(error.message);
+  })
+  setOpenSignin(false);
  }
  
   return (
@@ -84,11 +128,12 @@ function App() {
 
           <TextField
            placeholder="password"
-           type="text"
+           type="password"
            email={password}
            onChange={(e)=>setPassword(e.target.value)}
            >
           </TextField> 
+
 
           <Button type="submit" onClick={signUp} >Sign Up</Button>
 
@@ -100,6 +145,50 @@ function App() {
        
       </Modal>
 
+      <Modal
+        open={openSignIn}
+        onClose={()=> setOpenSignin(false)}
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+
+            <form  className="app__signup">
+            <center>
+            <img className="app__headerImage" 
+            src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+            alt="" />
+
+            </center>
+
+          <TextField
+           placeholder="email"
+           type="text"
+           email={email}
+           onChange={(e)=>setEmail(e.target.value)}
+           >
+          </TextField>
+
+          <TextField
+           placeholder="password"
+           type="password"
+           email={password}
+           onChange={(e)=>setPassword(e.target.value)}
+           >
+          </TextField> 
+
+
+          <Button type="submit" onClick={signIn} >Sign In</Button>
+
+          </form>
+            
+          </Typography>
+          
+        </Box>
+       
+      </Modal>
+
+
+
 
       <div className="app__header">
         <img
@@ -108,7 +197,22 @@ function App() {
           alt=""
         />
       </div>
-      <Button onClick={()=> setOpen(true)}>Sign Up</Button>
+       
+       
+       { user? (
+          <Button onClick={()=> auth.signOut()}>Logout</Button>
+
+        ): (
+          <div className="app__loginContainer">
+            <Button onClick={()=> setOpenSignin(true)}> Sign in </Button>
+            <Button onClick={()=> setOpen(true)}> Sign Up </Button>
+
+          </div>
+          
+          )
+      }
+
+
 
       <h1>Hello Clever programmer, Let's build an instagram clone with react</h1>
       {
