@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import ImageUpload from './ImageUpload';
 
 const style = {
   position: 'absolute',
@@ -95,6 +96,18 @@ return () => {
  
   return (
     <div className="app">
+
+      {
+        user?.displayName? (
+          <ImageUpload username={user.displayName}/>
+          
+        ) : (
+          <h3>Sorry you need to login to upload</h3>
+        )
+      }
+
+
+
       <Modal
         open={open}
         onClose={()=> setOpen(false)}
