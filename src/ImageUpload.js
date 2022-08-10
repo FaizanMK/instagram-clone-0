@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import React, { useState } from 'react';
 import firebase from 'firebase';
 import {db,storage} from './firebase';
-
+import './ImageUpload.css';
 
 function ImageUpload({username}) {
  const [image, setImage]=useState(null);
@@ -65,8 +65,8 @@ uploadTask.on (
 }
 
     return (
-    <div>
-        <progress value={progress} max="100"/>
+    <div className='Imageupload'>
+        <progress className='Imageupload__progress' value={progress} max="100"/>
         <input type="text" placeholder='Enter a caption...' onChange={(event) =>setCaption(event.target.value) } value={caption} /> 
         <input type="file" onChange={handleChange} />
         <Button onClick={handleUpload}> Upload </Button>
