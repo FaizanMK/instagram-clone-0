@@ -8,6 +8,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import ImageUpload from './ImageUpload';
+import InstagramEmbed from 'react-instagram-embed';
+
 
 const style = {
   position: 'absolute',
@@ -214,7 +216,8 @@ return () => {
       </div>
        
       <div className="app__posts">
-      {
+        <div className="app__postsLeft">
+        {
         posts.map(({id,post}) => (
         //  return <Post username={post.username} caption={post.caption} imageUrl={post.imageUrl} /> che kala
         // () na use kao {} da kao nu bya b return statement wrkao b/c map returns something
@@ -223,11 +226,28 @@ return () => {
 
         ))
       }
+        </div>
+        <div className="app__postsRight">
+        <InstagramEmbed
+      url='https://www.instagram.com/p/Cg-A5jgMS4Z/?igshid=YmMyMTA2M2Y='
+      clientAccessToken='123|456'
+      maxWidth={320}
+      hideCaption={false}
+      containerTagName='div'
+      protocol=''
+      injectScript
+      onLoading={() => {}}
+      onSuccess={() => {}}
+      onAfterRender={() => {}}
+      onFailure={() => {}}
+    />
+      
+        </div>
+      
+      
 
       </div>
-
-
-      
+    
 
 {
         user?.displayName? (
