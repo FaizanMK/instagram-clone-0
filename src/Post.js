@@ -21,7 +21,7 @@ function Post({postId, user, username, caption, imageUrl}) {
         .collection("comments")
         .orderBy('timestamp', 'desc')
         .onSnapshot((snapshot => {
-          setComment(snapshot.docs.map((doc) => doc.data() ));
+          setComments(snapshot.docs.map((doc) => doc.data() ));
         }))
 
       }
@@ -82,17 +82,23 @@ function Post({postId, user, username, caption, imageUrl}) {
           
         </div>
 
+        {
+          user && (
+            <form className="post__commentBox">
+            <input className="post__input" type="text" placeholder='Add a comment..' value={comment} onChange={(e)=>setComment(e.target.value)  } />
+    
+            <button className="post__button" disabled={!comment} type='submit' onClick={postComment}>
+            Post
+    
+            </button>
+    
+    
+          </form>
+    
+    
+          )
+        }
 
-      <form className="post__commentBox">
-        <input className="post__input" type="text" placeholder='Add a comment..' value={comment} onChange={(e)=>setComment(e.target.value)  } />
-
-        <button className="post__button" disabled={!comment} type='submit' onClick={postComment}>
-        Post
-
-        </button>
-
-
-      </form>
 
 
     </div>
