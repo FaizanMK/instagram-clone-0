@@ -222,7 +222,7 @@ return () => {
         //  return <Post username={post.username} caption={post.caption} imageUrl={post.imageUrl} /> che kala
         // () na use kao {} da kao nu bya b return statement wrkao b/c map returns something
 
-          <Post key={id}  username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
+          <Post key={id} postId={id} user={user}  username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
 
         ))
       }
